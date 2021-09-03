@@ -1,24 +1,23 @@
-import logo from './logo.svg';
-import './App.css';
+import { Suspense, lazy } from 'react';
+import { Switch, Route } from 'react-router-dom';
+import { ThemeProvider } from '@material-ui/core/styles';
+import CssBaseline from '@material-ui/core/CssBaseline';
+
+import LINKS from 'utils/constants/links'
+import theme from 'styles/theme'
+
+const Welcome = lazy(() => import('containers/Welcome'))
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <ThemeProvider theme={theme}>
+      <CssBaseline />
+      <Suspense fallback={<div>Loading...</div>}>
+        <Switch>
+          <Route exact path={LINKS.WELCOME.HREF} component={Welcome} />
+        </Switch>
+      </Suspense>
+    </ThemeProvider>
   );
 }
 
