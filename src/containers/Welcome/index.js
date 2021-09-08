@@ -1,20 +1,22 @@
 
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { useCommonStyles } from 'styles/use-styles'
+import { Typography } from '@material-ui/core'
 import clsx from 'clsx'
 
+import { useRoutes } from 'contexts/router-context';
 import Logo from 'components/Logo'
-import { Typography } from '@material-ui/core'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
+import LINKS from 'utils/constants/links';
+import { useCommonStyles } from 'styles/use-styles'
 
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
     flexDirection: 'column',
     alignItems: 'center',
+    justifyContent: 'center',
     height: '100%',
-    margin: theme.spacing(3, 0)
   },
   container: {
     display: 'flex',
@@ -22,16 +24,18 @@ const useStyles = makeStyles((theme) => ({
     alignItems: 'center'
   },
   logo: {
-    margin: theme.spacing(5, 0)
+    marginBottom: theme.spacing(5)
   },
   description: {
-    margin: theme.spacing(2, 0)
+    margin: theme.spacing(3, 0)
   }
 }));
 
 const Welcome = () => {
   const classes = useStyles()
   const commonClasses = useCommonStyles()
+
+  const { routePush } = useRoutes()
 
   return (
     <main className={classes.root}>
@@ -40,7 +44,7 @@ const Welcome = () => {
           size={80}
           className={classes.logo}
         />
-        <Typography variant='h5'>
+        <Typography variant='h5' align='center'>
           Welcome to JupMask
         </Typography>
         <Typography className={classes.description} align='center'>
@@ -48,7 +52,7 @@ const Welcome = () => {
           <br />
           We’re happy to see you.
         </Typography>
-        <ContainedButton>
+        <ContainedButton onClick={() => routePush(LINKS.SIGN_IN)}>
           Get Started
         </ContainedButton>
       </div>

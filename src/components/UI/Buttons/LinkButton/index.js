@@ -1,9 +1,10 @@
 
 import React, { memo } from 'react'
-import Link from 'next/link'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
 import clsx from 'clsx'
+
+import { useRoutes } from 'contexts/router-context';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -21,34 +22,28 @@ const useStyles = makeStyles(theme => ({
 const LinkButton = ({
   className,
   href,
-  as,
-  target = '',
   onClick = () => { },
   children
 }) => {
   const classes = useStyles();
+  const { routePush } = useRoutes()
 
-  return href
-    ? (
-      <Link
-        as={as}
-        href={href}
-      >
-        <a
-          target={target}
-          className={clsx(classes.root, className)}
-        >
-          {children}
-        </a>
-      </Link>
-    ) : (
-      <Typography
-        className={clsx(classes.root, className)}
-        onClick={onClick}
-      >
-        {children}
-      </Typography>
-    )
+  const clickHandler = () => {
+    if (!!href) {
+      routePush(href);
+      return
+    }
+
+    onClick()
+  }
+  return (
+    <Typography
+      className={clsx(classes.root, className)}
+      onClick={clickHandler}
+    >
+      {children}
+    </Typography>
+  )
 };
 
 export default memo(LinkButton);

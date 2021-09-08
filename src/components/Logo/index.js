@@ -16,7 +16,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 const Logo = ({
-  size = 35,
+  size = 95,
   className,
   ...rest
 }) => {

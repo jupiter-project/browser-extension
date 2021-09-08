@@ -1,18 +1,24 @@
 html,
 body {
-  min-height: 100vh;
-  scroll-behavior: smooth;
+  width: 357px;
+  height: 600px;
   padding: 0 !important;
   overflow-x: hidden !important;
+  background-color: aquamarine;
+}
+
+#root {
+  min-height: 100%;
+  height: -webkit-fill-available;
 }
 
 *::-webkit-scrollbar {
-	width: 6px;
+	width: 3px;
 	background-color: transparent;
 }
 
 *::-webkit-scrollbar:horizontal {
-	height: 6px;
+	height: 3px;
 }
 
 *::-webkit-scrollbar-track {
@@ -35,4 +41,4 @@ body {
 
 input::-ms-clear, input::-ms-reveal {
   display: none;
- }
+}

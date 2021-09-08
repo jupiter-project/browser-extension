@@ -4,8 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Button from '@material-ui/core/Button'
 import clsx from 'clsx'
 
-import ButtonLink from 'components/UI/Buttons/ButtonLink'
-
 const useStyles = makeStyles(theme => ({
   root: {
     fontSize: 15,
@@ -41,7 +39,6 @@ const OutlinedButton = React.forwardRef(({
     <Button
       ref={ref}
       href={href}
-      component={href ? ButtonLink : 'button'}
       className={clsx(className, classes.root)}
       classes={{
         ...propClasses,
