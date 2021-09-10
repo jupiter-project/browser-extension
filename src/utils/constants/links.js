@@ -4,6 +4,9 @@ const LINKS = Object.freeze({
   SIGN_IN: 'sign-in',
   SIGN_UP: 'sign-up',
   MY_ACCOUNT: 'my-account',
+  SETTING: 'setting',
+  SEND_JUP: 'send-jup',
+  SEND_ASSET: 'send-asset',
 });
 
 export default LINKS;

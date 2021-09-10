@@ -1,6 +1,5 @@
 
 import { memo, useCallback } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
 
 import MagicDialog from 'components/MagicDialog'
 import ValueItem from 'parts/ValueItem'
@@ -8,16 +7,11 @@ import getTransactionType from 'utils/helpers/getTransactionType'
 import { getDateFromTimestamp } from 'utils/helpers/getTimestamp'
 import { NQT_WEIGHT } from 'utils/constants/common'
 
-const useStyles = makeStyles((theme) => ({
- 
-}));
-
 const TransactionDialog = ({
   open,
   setOpen,
   transaction,
 }) => {
-  const classes = useStyles();
 
   const handleClose = useCallback(() => {
     setOpen(false);

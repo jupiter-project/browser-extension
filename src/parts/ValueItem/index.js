@@ -7,6 +7,7 @@ const useStyles = makeStyles(theme => ({
   item: {
     display: 'flex',
     alignItems: 'center',
+    width: '100%',
     marginBottom: theme.spacing(2)
   },
   label: {

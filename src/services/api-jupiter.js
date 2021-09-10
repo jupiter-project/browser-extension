@@ -42,6 +42,16 @@ const getBlockchainTransactions = async ({ account, firstIndex, lastIndex }) => 
   return await apiAxios.get(`/nxt?requestType=getBlockchainTransactions&account=${account}&firstIndex=${firstIndex}&lastIndex=${lastIndex}`)
 }
 
+const sendMoney = async (params) => {
+  const url = `/nxt?requestType=sendMoney&recipient=${params.receiver}&amountNQT=${params.amount}&message=${params.sender}&secretPhrase=${params.passphrase}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  return await apiAxios.post(url)
+}
+
+const transferAsset = async (params) => {
+  const url = `/nxt?requestType=transferAsset&recipient=${params.receiver}&asset=${params.asset}&quantityQNT=${params.amount}&message=${params.sender}&secretPhrase=${params.passphrase}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  return await apiAxios.post(url)
+}
+
 export {
   getAccountByPassphrase,
   getAccountByAccountID,
@@ -49,5 +59,7 @@ export {
   getAccount,
   getTransaction,
   getAccountAssets,
-  getBlockchainTransactions
+  getBlockchainTransactions,
+  sendMoney,
+  transferAsset
 };

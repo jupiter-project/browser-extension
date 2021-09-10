@@ -11,6 +11,9 @@ const Welcome = lazy(() => import('containers/Welcome'))
 const SignIn = lazy(() => import('containers/Auth/SignIn'))
 const SignUp = lazy(() => import('containers/Auth/SignUp'))
 const MyAccount = lazy(() => import('containers/MyAccount'))
+const Setting = lazy(() => import('containers/Setting'))
+const SendJup = lazy(() => import('containers/SendJup'))
+const SendAsset = lazy(() => import('containers/SendAsset'))
 
 function App() {
   const { currentRouter } = useRoutes()
@@ -21,6 +24,9 @@ function App() {
       case LINKS.SIGN_IN: return <SignIn />
       case LINKS.SIGN_UP: return <SignUp />
       case LINKS.MY_ACCOUNT: return <MyAccount />
+      case LINKS.SETTING: return <Setting />
+      case LINKS.SEND_JUP: return <SendJup />
+      case LINKS.SEND_ASSET: return <SendAsset />
       default: return <Welcome />
     }
   }
