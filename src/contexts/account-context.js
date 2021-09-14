@@ -1,25 +1,47 @@
-
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
 
 import * as jupiterAPI from 'services/api-jupiter'
 import { isEmpty } from 'utils/helpers/utility'
+// import useAccountStore from 'utils/hooks/useAccountStore'
 
 const ContractContext = createContext(null)
-const PASSPHRASE = 'human future nose relax monster stress relax choosen acher chill wife bare'
 
 export function AccountProvider({ children }) {
   const [passphrase, setPassphrase] = useState({})
+  const [accountRS, setAccountRS] = useState('')
   const [accountInfo, setAccountInfo] = useState({})
   const [assets, setAssets] = useState([])
   const [transactions, setTransactions] = useState([])
+  // const [accounts] = useAccountStore();
 
   useEffect(() => {
-    const accountInfo = localStorage.accountInfo;
-    if (!!accountInfo) {
-      setAccountInfo(JSON.parse(accountInfo))
-      setPassphrase(PASSPHRASE)
+    const accountRS = localStorage.accountRS;
+    const passphrase = localStorage.passphrase;
+    if (!!accountRS) {
+      setAccountRS(accountRS)
     }
-  }, [setAccountInfo]);
+
+    if (!!passphrase) {
+      setPassphrase(passphrase)
+    }
+  }, [setAccountRS, setPassphrase]);
+
+  const getAccountInfo = useCallback(async () => {
+    try {
+      const response = await jupiterAPI.getAccount(accountRS);
+      setAccountInfo(response)
+    } catch (error) {
+      console.log('[Error] getAssets => ', error)
+    }
+  }, [accountRS, setAccountInfo])
+
+  useEffect(() => {
+    if (!!accountRS) {
+      getAccountInfo(accountRS)
+    } else {
+      setAccountInfo({})
+    }
+  }, [accountRS, getAccountInfo]);
 
   const getAssets = useCallback(async () => {
     try {
@@ -51,15 +73,17 @@ export function AccountProvider({ children }) {
     }
   }, [accountInfo, getAssets, getTransactions])
 
-  const setAccount = useCallback((accountInfo) => {
-    localStorage.setItem('accountInfo', JSON.stringify(accountInfo));
-    setAccountInfo(accountInfo)
-  }, [setAccountInfo])
+  const setAccount = useCallback((accountRS, passphrase) => {
+    localStorage.setItem('accountRS', accountRS);
+    localStorage.setItem('passphrase', passphrase);
+    setAccountRS(accountRS)
+    setPassphrase(passphrase)
+  }, [setAccountRS, setPassphrase])
 
   const onLock = useCallback(() => {
     localStorage.clear();
-    setAccountInfo({})
-  }, [setAccountInfo])
+    setAccountRS('')
+  }, [setAccountRS])
 
   return (
     <ContractContext.Provider

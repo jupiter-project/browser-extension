@@ -62,7 +62,7 @@ const SignUp = () => {
         return;
       }
 
-      setAccount(response);
+      setAccount(response.accountRS, data.passphrase);
       // setPopUp({ text: MESSAGES.SIGN_UP_SUCCESS })
       routePush(LINKS.MY_ACCOUNT);
     } catch (error) {

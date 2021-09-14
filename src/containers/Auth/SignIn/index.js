@@ -12,9 +12,10 @@ import * as jupiterAPI from 'services/api-jupiter'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import LinkButton from 'components/UI/Buttons/LinkButton'
 import AccountTextField from 'components/UI/TextFields/AccountTextField'
+import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import LINKS from 'utils/constants/links'
-import { ACCOUNT_VALID } from 'utils/constants/validations'
+import { ACCOUNT_VALID, PASSPHRASE_VALID } from 'utils/constants/validations'
 import TEXT_MASKS from 'utils/constants/text-masks'
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +28,8 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = yup.object().shape({
-  account: ACCOUNT_VALID
+  account: ACCOUNT_VALID,
+  passphrase: PASSPHRASE_VALID
 });
 
 const SignIn = () => {
@@ -49,7 +51,7 @@ const SignIn = () => {
         return;
       }
 
-      setAccount(response);
+      setAccount(response.accountRS, data.passphrase);
       routePush(LINKS.MY_ACCOUNT)
     } catch (error) {
       console.log(error)
@@ -71,6 +73,16 @@ const SignIn = () => {
           placeholder='JUP-____-____-____-_____'
           mask={TEXT_MASKS.ACCOUNT}
           error={errors.account?.message}
+          className={authClasses.input}
+          control={control}
+          defaultValue=''
+        />
+        <Controller
+          as={<MagicTextField />}
+          type='password'
+          name='passphrase'
+          label='Confirm Passphrase'
+          error={errors.passphrase?.message}
           className={authClasses.input}
           control={control}
           defaultValue=''

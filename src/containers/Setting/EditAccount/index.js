@@ -46,7 +46,7 @@ const useStyles = makeStyles((theme) => ({
 const EditAccount = () => {
   const classes = useStyles();
   const { setLoading } = useRoutes()
-  const { accountInfo, passphrase, setAccount } = useAccount()
+  const { accountInfo, passphrase } = useAccount()
 
   const { control, errors, formState, handleSubmit } = useForm({
     resolver: yupResolver(schema)
@@ -71,18 +71,13 @@ const EditAccount = () => {
         return;
       }
 
-      setAccount({
-        ...accountInfo,
-        name: data.name,
-        description: data.description,
-      })
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
     } catch (error) {
       console.log(error)
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
     }
     setLoading(false)
-  }, [accountInfo, passphrase, setAccount, setLoading]);
+  }, [accountInfo, passphrase, setLoading]);
 
   return (
     <form

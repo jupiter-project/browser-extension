@@ -11,5 +11,20 @@
   "browser_action": {
     "default_icon": "logo512.png",
     "default_popup": "popup.html"
-  }
+  },
+  "background": {
+    "scripts": [
+      "static/background.js"
+    ]
+  },
+  "permissions": [
+    "storage",
+    "unlimitedStorage",
+    "clipboardWrite",
+    "activeTab",
+    "webRequest",
+    "notifications",
+    "http://localhost/*"
+  ],
+  "content_security_policy": "script-src 'self' 'unsafe-eval'; object-src 'self'"
 }
