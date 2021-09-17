@@ -1,7 +1,7 @@
 
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { Typography, Divider } from '@material-ui/core'
+import { Typography, Divider, Tooltip } from '@material-ui/core'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 
 import { useAccount } from 'contexts/account-context'
@@ -31,13 +31,12 @@ const Setting = () => {
 
   return (
     <Layout>
-      <CopyToClipboard
-        text={passphrase}
-        onCopy={() => alert(`${passphrase} Copied!`)}
-      >
-        <Typography className={classes.passphrase}>
-          {passphrase}
-        </Typography>
+      <CopyToClipboard text={passphrase}>
+        <Tooltip title="Click to copy">
+          <Typography className={classes.passphrase}>
+            {passphrase}
+          </Typography>
+        </Tooltip>
       </CopyToClipboard>
       <Divider orientation='vertical' className={classes.divider} />
       <EditAccount />

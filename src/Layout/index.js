@@ -1,7 +1,7 @@
 
 import { memo } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
-import { AppBar, Toolbar, Typography } from '@material-ui/core'
+import { AppBar, Toolbar, Typography, Tooltip } from '@material-ui/core'
 import { CopyToClipboard } from 'react-copy-to-clipboard'
 import FileCopyIcon from '@material-ui/icons/FileCopy'
 
@@ -67,14 +67,13 @@ const Layout = ({
             size={30}
             onClick={() => routePush(LINKS.MY_ACCOUNT)}
           />
-          <CopyToClipboard
-            text={accountInfo.accountRS}
-            onCopy={() => alert(`${accountInfo.accountRS} Copied!`)}
-          >
-            <Typography className={classes.account}>
-              {accountInfo.accountRS}
-              <FileCopyIcon className={classes.copyIcon} />
-            </Typography>
+          <CopyToClipboard text={accountInfo.accountRS} >
+            <Tooltip title="Click to copy" className={classes.passphrase}>
+              <Typography className={classes.account}>
+                {accountInfo.accountRS}
+                <FileCopyIcon className={classes.copyIcon} />
+              </Typography>
+            </Tooltip>
           </CopyToClipboard>
           <NavDropMenu />
         </Toolbar>

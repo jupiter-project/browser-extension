@@ -1,8 +1,10 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
+import { encode, decode } from 'js-base64'
 
 import * as jupiterAPI from 'services/api-jupiter'
+import { IS_EXTENSION } from 'config'
+import useAccountStore from 'utils/hooks/useAccountStore'
 import { isEmpty } from 'utils/helpers/utility'
-// import useAccountStore from 'utils/hooks/useAccountStore'
 
 const ContractContext = createContext(null)
 
@@ -12,19 +14,29 @@ export function AccountProvider({ children }) {
   const [accountInfo, setAccountInfo] = useState({})
   const [assets, setAssets] = useState([])
   const [transactions, setTransactions] = useState([])
-  // const [accounts] = useAccountStore();
+  const [accountStore = {}, setAccountStore = () => { }] = useAccountStore();
 
   useEffect(() => {
-    const accountRS = localStorage.accountRS;
-    const passphrase = localStorage.passphrase;
+    let accountRS = ''
+    let passphrase = ''
+    if (IS_EXTENSION) {
+      accountRS = accountStore.accountRS;
+      passphrase = accountStore.passphrase;
+    } else {
+      accountRS = localStorage.accountRS;
+      passphrase = localStorage.passphrase;
+    }
+
     if (!!accountRS) {
       setAccountRS(accountRS)
     }
 
     if (!!passphrase) {
-      setPassphrase(passphrase)
+      const decodedPassphrase = decode(passphrase)
+      setPassphrase(decodedPassphrase)
     }
-  }, [setAccountRS, setPassphrase]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountStore, setAccountRS, setPassphrase]);
 
   const getAccountInfo = useCallback(async () => {
     try {
@@ -74,16 +86,34 @@ export function AccountProvider({ children }) {
   }, [accountInfo, getAssets, getTransactions])
 
   const setAccount = useCallback((accountRS, passphrase) => {
-    localStorage.setItem('accountRS', accountRS);
-    localStorage.setItem('passphrase', passphrase);
+    const encodedPassphrase = encode(passphrase)
+    if (IS_EXTENSION) {
+      setAccountStore({
+        accountRS,
+        passphrase: encodedPassphrase
+      })
+    } else {
+      localStorage.setItem('accountRS', accountRS);
+      localStorage.setItem('passphrase', encodedPassphrase);
+    }
+
     setAccountRS(accountRS)
     setPassphrase(passphrase)
-  }, [setAccountRS, setPassphrase])
+  }, [setAccountRS, setPassphrase, setAccountStore])
 
   const onLock = useCallback(() => {
-    localStorage.clear();
+    if (IS_EXTENSION) {
+      setAccountStore({
+        accountRS: '',
+        passphrase: ''
+      })
+    } else {
+      localStorage.clear();
+    }
+
     setAccountRS('')
-  }, [setAccountRS])
+    setPassphrase('')
+  }, [setAccountRS, setPassphrase, setAccountStore])
 
   return (
     <ContractContext.Provider

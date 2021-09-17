@@ -1,11 +1,13 @@
 import { createChromeStorageStateHookLocal } from 'use-chrome-storage';
 
+import { IS_EXTENSION } from 'config'
+
 const SETTINGS_KEY = 'account';
 const INITIAL_VALUE = {
-  account: '',
+  accountRS: '',
   passphrase: '',
 };
 
-const useAccountStore = createChromeStorageStateHookLocal(SETTINGS_KEY, INITIAL_VALUE);
+const useAccountStore = IS_EXTENSION ? createChromeStorageStateHookLocal(SETTINGS_KEY, INITIAL_VALUE) : () => [];
 
 export default useAccountStore;
