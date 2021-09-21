@@ -8,6 +8,7 @@ import LINKS from 'utils/constants/links';
 import theme from 'styles/theme'
 
 const Welcome = lazy(() => import('containers/Welcome'))
+const Unlock = lazy(() => import('containers/Auth/Unlock'))
 const SignIn = lazy(() => import('containers/Auth/SignIn'))
 const SignUp = lazy(() => import('containers/Auth/SignUp'))
 const MyAccount = lazy(() => import('containers/MyAccount'))
@@ -21,6 +22,7 @@ function App() {
   const view = () => {
     switch (currentRouter) {
       case LINKS.WELCOME: return <Welcome />
+      case LINKS.UNLOCK: return <Unlock />
       case LINKS.SIGN_IN: return <SignIn />
       case LINKS.SIGN_UP: return <SignUp />
       case LINKS.MY_ACCOUNT: return <MyAccount />

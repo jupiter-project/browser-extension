@@ -10,18 +10,28 @@ import { isEmpty } from 'utils/helpers/utility'
 const ContractContext = createContext(null)
 
 export function RoutesProvider({ children }) {
-  const { accountInfo } = useAccount()
+  const { isLocked, accountRS, accountInfo } = useAccount()
   const [loading, setLoading] = useState(false)
   const [currentRouter, setCurrentRouter] = useState(LINKS.WELCOME)
   const [routerParams, setRouterParams] = useState({})
 
   useEffect(() => {
+    if (!accountRS) {
+      setCurrentRouter(LINKS.SIGN_IN)
+      return
+    }
+
+    if (isLocked) {
+      setCurrentRouter(LINKS.UNLOCK)
+      return
+    }
+
     if (!isEmpty(accountInfo)) {
       setCurrentRouter(LINKS.MY_ACCOUNT)
     } else {
       setCurrentRouter(LINKS.SIGN_IN)
     }
-  }, [accountInfo]);
+  }, [accountRS, isLocked, accountInfo]);
 
   const routePush = useCallback((value, params = {}) => {
     if (AUTH_RUTES.includes(value) && !isEmpty(accountInfo)) {

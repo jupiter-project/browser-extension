@@ -14,6 +14,7 @@ import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import generatePassphrase from 'utils/helpers/generatePassphrase'
 import LINKS from 'utils/constants/links'
+import { PASSWORD_VALID } from 'utils/constants/validations'
 // import MESSAGES from 'utils/constants/messages'
 
 const useStyles = makeStyles((theme) => ({
@@ -46,6 +47,7 @@ const SignUp = () => {
       .string()
       .required('Please input field.')
       .oneOf([newPassphrase], 'Passphrase doesn’t match.'),
+    password: PASSWORD_VALID
   });
 
   const { control, handleSubmit, errors } = useForm({
@@ -62,7 +64,7 @@ const SignUp = () => {
         return;
       }
 
-      setAccount(response.accountRS, data.passphrase);
+      setAccount(response.accountRS, data.passphrase, data.password);
       // setPopUp({ text: MESSAGES.SIGN_UP_SUCCESS })
       routePush(LINKS.MY_ACCOUNT);
     } catch (error) {
@@ -100,6 +102,16 @@ const SignUp = () => {
           name='passphrase'
           label='Confirm Passphrase'
           error={errors.passphrase?.message}
+          className={authClasses.input}
+          control={control}
+          defaultValue=''
+        />
+        <Controller
+          as={<MagicTextField />}
+          type='password'
+          name='password'
+          label='Password'
+          error={errors.password?.message}
           className={authClasses.input}
           control={control}
           defaultValue=''

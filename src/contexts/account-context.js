@@ -9,6 +9,7 @@ import { isEmpty } from 'utils/helpers/utility'
 const ContractContext = createContext(null)
 
 export function AccountProvider({ children }) {
+  const [isLocked, setIsLocked] = useState(true)
   const [passphrase, setPassphrase] = useState({})
   const [accountRS, setAccountRS] = useState('')
   const [accountInfo, setAccountInfo] = useState({})
@@ -17,6 +18,8 @@ export function AccountProvider({ children }) {
   const [accountStore = {}, setAccountStore = () => { }] = useAccountStore();
 
   useEffect(() => {
+    const lock = localStorage.lock
+
     let accountRS = ''
     let passphrase = ''
     if (IS_EXTENSION) {
@@ -31,12 +34,19 @@ export function AccountProvider({ children }) {
       setAccountRS(accountRS)
     }
 
+    if (lock === 'lock') {
+      setIsLocked(true)
+      return
+    } else {
+      setIsLocked(false)
+    }
+
     if (!!passphrase) {
       const decodedPassphrase = decode(passphrase)
       setPassphrase(decodedPassphrase)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountStore, setAccountRS, setPassphrase]);
+  }, [accountStore, setAccountRS, setPassphrase, setIsLocked]);
 
   const getAccountInfo = useCallback(async () => {
     try {
@@ -48,12 +58,12 @@ export function AccountProvider({ children }) {
   }, [accountRS, setAccountInfo])
 
   useEffect(() => {
-    if (!!accountRS) {
-      getAccountInfo(accountRS)
+    if (!!accountRS && !isLocked) {
+      getAccountInfo()
     } else {
       setAccountInfo({})
     }
-  }, [accountRS, getAccountInfo]);
+  }, [isLocked, accountRS, getAccountInfo]);
 
   const getAssets = useCallback(async () => {
     try {
@@ -85,45 +95,73 @@ export function AccountProvider({ children }) {
     }
   }, [accountInfo, getAssets, getTransactions])
 
-  const setAccount = useCallback((accountRS, passphrase) => {
+  const setAccount = useCallback((accountRS, passphrase, password) => {
     const encodedPassphrase = encode(passphrase)
+    const encodedPassword = encode(password)
+
     if (IS_EXTENSION) {
       setAccountStore({
         accountRS,
-        passphrase: encodedPassphrase
+        passphrase: encodedPassphrase,
+        password: encodedPassword
       })
     } else {
       localStorage.setItem('accountRS', accountRS);
       localStorage.setItem('passphrase', encodedPassphrase);
+      localStorage.setItem('password', encodedPassword);
     }
+    localStorage.setItem('lock', 'unlock');
 
     setAccountRS(accountRS)
     setPassphrase(passphrase)
-  }, [setAccountRS, setPassphrase, setAccountStore])
+    setIsLocked(false)
+  }, [setAccountRS, setPassphrase, setIsLocked, setAccountStore])
 
-  const onLock = useCallback(() => {
+  const onUnlock = useCallback((passwordValue) => {
+    const encodedPassword = encode(passwordValue)
+
+    let passphrase = ''
+    let password = ''
     if (IS_EXTENSION) {
-      setAccountStore({
-        accountRS: '',
-        passphrase: ''
-      })
+      passphrase = accountStore.passphrase;
+      password = accountStore.password;
     } else {
-      localStorage.clear();
+      passphrase = localStorage.passphrase;
+      password = localStorage.password;
     }
 
-    setAccountRS('')
+    if (password !== encodedPassword) {
+      return false
+    }
+
+    if (!!passphrase) {
+      const decodedPassphrase = decode(passphrase)
+      setPassphrase(decodedPassphrase)
+    }
+
+    localStorage.setItem('lock', 'unlock');
+    setIsLocked(false)
+    return true;
+  }, [accountStore, setPassphrase, setIsLocked])
+
+  const onLock = useCallback(() => {
+    localStorage.setItem('lock', 'lock');
     setPassphrase('')
-  }, [setAccountRS, setPassphrase, setAccountStore])
+    setIsLocked(true)
+  }, [setIsLocked, setPassphrase])
 
   return (
     <ContractContext.Provider
       value={{
+        isLocked,
+        accountRS,
         passphrase,
         accountInfo,
         assets,
         transactions,
         setAccount,
         onLock,
+        onUnlock,
         getAssets,
         getTransactions
       }}
@@ -140,23 +178,29 @@ export function useAccount() {
   }
 
   const {
+    isLocked,
+    accountRS,
     passphrase,
     accountInfo,
     assets,
     transactions,
     setAccount,
     onLock,
+    onUnlock,
     getAssets,
     getTransactions
   } = context
 
   return {
+    isLocked,
+    accountRS,
     passphrase,
     accountInfo,
     assets,
     transactions,
     setAccount,
     onLock,
+    onUnlock,
     getAssets,
     getTransactions
   }

@@ -1,6 +1,5 @@
 
 import { memo, useCallback } from 'react'
-import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
@@ -8,36 +7,31 @@ import * as yup from 'yup'
 
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
-import * as jupiterAPI from 'services/api-jupiter'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import LinkButton from 'components/UI/Buttons/LinkButton'
-import AccountTextField from 'components/UI/TextFields/AccountTextField'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import LINKS from 'utils/constants/links'
-import { ACCOUNT_VALID, PASSPHRASE_VALID, PASSWORD_VALID } from 'utils/constants/validations'
-import TEXT_MASKS from 'utils/constants/text-masks'
+import { PASSWORD_VALID } from 'utils/constants/validations'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
     display: 'flex'
   },
-  signup: {
+  signin: {
     paddingLeft: theme.spacing(1)
   }
 }));
 
 const schema = yup.object().shape({
-  account: ACCOUNT_VALID,
-  passphrase: PASSPHRASE_VALID,
   password: PASSWORD_VALID
 });
 
-const SignIn = () => {
+const Unlock = () => {
   const classes = useStyles();
   const authClasses = authPageStyles();
-  const { routePush, setLoading } = useRoutes()
-  const { setAccount } = useAccount()
+  const { setLoading } = useRoutes()
+  const { onUnlock } = useAccount()
 
   const { control, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
@@ -46,19 +40,15 @@ const SignIn = () => {
   const onSubmit = useCallback(async (data) => {
     setLoading(true)
     try {
-      const response = await jupiterAPI.getAccountByAccountID(data.account);
-      if (!response?.accountRS) {
-        setLoading(false)
-        return;
+      const response = await onUnlock(data.password);
+      if (!response) {
+        alert('Wrong password!')
       }
-
-      setAccount(response.accountRS, data.passphrase, data.password);
-      routePush(LINKS.MY_ACCOUNT)
     } catch (error) {
       console.log(error)
     }
     setLoading(false)
-  }, [routePush, setLoading, setAccount]);
+  }, [setLoading, onUnlock]);
 
   return (
     <AuthWrapper>
@@ -67,27 +57,6 @@ const SignIn = () => {
         className={authClasses.form}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Controller
-          as={<AccountTextField />}
-          name='account'
-          label='JUP Address'
-          placeholder='JUP-____-____-____-_____'
-          mask={TEXT_MASKS.ACCOUNT}
-          error={errors.account?.message}
-          className={authClasses.input}
-          control={control}
-          defaultValue=''
-        />
-        <Controller
-          as={<MagicTextField />}
-          type='password'
-          name='passphrase'
-          label='Passphrase'
-          error={errors.passphrase?.message}
-          className={authClasses.input}
-          control={control}
-          defaultValue=''
-        />
         <Controller
           as={<MagicTextField />}
           type='password'
@@ -102,20 +71,14 @@ const SignIn = () => {
           type='submit'
           className={authClasses.button}
         >
-          Log In
+          Unlock
         </ContainedButton>
         <div className={classes.footer}>
-          <Typography
-            variant='body2'
-            color='textSecondary'
-          >
-            {'Don\'t have an account?'}
-          </Typography>
           <LinkButton
-            href={LINKS.SIGN_UP}
-            className={classes.signup}
+            href={LINKS.SIGN_IN}
+            className={classes.signin}
           >
-            Create New Account
+            Login with passphrase
           </LinkButton>
         </div>
       </form>
@@ -123,4 +86,4 @@ const SignIn = () => {
   )
 }
 
-export default memo(SignIn)
+export default memo(Unlock)

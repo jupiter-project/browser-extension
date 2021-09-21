@@ -36,6 +36,10 @@ const PRICE_VALID = yup.number()
     value => ((value).toString().split('.')[1] || []).length <= 8)
   .required('Please input field.');
 
+const PASSWORD_VALID = yup.string()
+  .required('Please enter in Password.')
+  .min(6, 'Passwords need to be at least 6 characters.');
+
 export {
   TITLE_VALID,
   STRING_VALID,
@@ -43,5 +47,6 @@ export {
   ACCOUNT_VALID,
   PASSPHRASE_VALID,
   PRICE_VALID,
+  PASSWORD_VALID,
   ACCOUNT_DESCRIPTION_VALID
 };
