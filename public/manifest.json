@@ -1,7 +1,7 @@
 {
-  "short_name": "JupMask",
-  "name": "JupMask",
-  "description": "Connect to Jupiter Chain Network",
+  "short_name": "Europa",
+  "name": "Jupiter Europa",
+  "description": "Connect to Jupiter Blockchain Network",
   "version": "1.0.0",
   "manifest_version": 3,
   "icons": {

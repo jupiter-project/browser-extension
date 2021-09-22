@@ -45,7 +45,7 @@ const Welcome = () => {
           className={classes.logo}
         />
         <Typography variant='h5' align='center'>
-          Welcome to JupMask
+          Welcome to Europa
         </Typography>
         <Typography className={classes.description} align='center'>
           Connecting you to Jupiter and the Decentralized Web.
