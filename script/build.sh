@@ -1,7 +1,7 @@
 #!/bin/bash
 
 build() {
-    echo 'building react'
+    echo 'Please wait while we build Europa!'
 
     rm -rf dist/*
 

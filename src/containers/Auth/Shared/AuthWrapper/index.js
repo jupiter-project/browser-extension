@@ -52,7 +52,7 @@ const AuthWrapper = ({
         color='primary'
         className={classes.welcome}
       >
-        Welcome to JupMask!
+        Welcome to Europa!
       </Typography>
       {children}
     </div>
