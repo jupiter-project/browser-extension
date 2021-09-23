@@ -1,7 +1,7 @@
 
 const JUPITER_URL = 'https://nodes.jup.io/'
 
-const IS_EXTENSION = true
+const IS_EXTENSION = false
 
 export {
   JUPITER_URL,

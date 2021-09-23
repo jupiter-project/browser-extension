@@ -19,6 +19,7 @@ import {
   PRICE_VALID
 } from 'utils/constants/validations'
 import TEXT_MASKS from 'utils/constants/text-masks'
+import LINKS from 'utils/constants/links'
 
 const schema = yup.object().shape({
   account: ACCOUNT_VALID,
@@ -51,8 +52,9 @@ const SendAsset = () => {
   const classes = useStyles();
   const { setLoading, routerParams: { asset = {} } = {} } = useRoutes()
   const { accountInfo, passphrase } = useAccount()
+  const { routePush } = useRoutes()
 
-  const { control, errors, handleSubmit } = useForm({
+  const { control, errors, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema)
   })
 
@@ -75,12 +77,14 @@ const SendAsset = () => {
         return;
       }
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
+      setValue('amount', '')
+      routePush(LINKS.MY_ACCOUNT)
     } catch (error) {
       console.log(error)
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
     }
     setLoading(false)
-  }, [asset, accountInfo, passphrase, setLoading]);
+  }, [asset, accountInfo, passphrase, setLoading, setValue, routePush]);
 
   return (
     <Layout>

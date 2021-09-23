@@ -19,6 +19,7 @@ import {
 } from 'utils/constants/validations'
 import TEXT_MASKS from 'utils/constants/text-masks'
 import { NQT_WEIGHT } from 'utils/constants/common'
+import LINKS from 'utils/constants/links'
 
 const schema = yup.object().shape({
   account: ACCOUNT_VALID,
@@ -51,8 +52,9 @@ const SendJup = () => {
   const classes = useStyles();
   const { setLoading } = useRoutes()
   const { accountInfo, passphrase } = useAccount()
+  const { routePush } = useRoutes()
 
-  const { control, errors, handleSubmit } = useForm({
+  const { control, errors, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema)
   })
 
@@ -74,12 +76,14 @@ const SendJup = () => {
         return;
       }
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
+      setValue('amount', '')
+      routePush(LINKS.MY_ACCOUNT)
     } catch (error) {
       console.log(error)
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
     }
     setLoading(false)
-  }, [accountInfo, passphrase, setLoading]);
+  }, [accountInfo, passphrase, setLoading, setValue, routePush]);
 
   return (
     <Layout>
