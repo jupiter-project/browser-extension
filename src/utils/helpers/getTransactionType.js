@@ -35,6 +35,14 @@ const getTransactionType = (type, subtype) => {
           return 'ACCOUNT PROPERTY';
         case TRANSACTION_TYPES.SUBTYPE_MESSAGING_ACCOUNT_PROPERTY_DELETE:
           return 'ACCOUNT PROPERTY DELETE';
+        case TRANSACTION_TYPES.SUBTYPE_MESSAGING_METIS_ACCOUNT_INFO:
+          return 'METIS ACCOUNT INFO';
+        case TRANSACTION_TYPES.SUBTYPE_MESSAGING_METIS_CHANNEL_INVITATION:
+          return 'METIS CHANNEL INVITATION';
+        case TRANSACTION_TYPES.SUBTYPE_MESSAGING_METIS_CHANNEL_MEMBER:
+          return 'METIS CHANNEL MEMBER';
+        case TRANSACTION_TYPES.SUBTYPE_MESSAGING_METIS_ARBITRARY_MESSAGE:
+          return 'METIS ARBITRARY MESSAGE';
         default:
           return 'ARBITRARY MESSAGE';
       }
@@ -102,6 +110,15 @@ const getTransactionType = (type, subtype) => {
       }
     case TRANSACTION_TYPES.TYPE_SHUFFLING:
       return 'SHUFFLING';
+    case TRANSACTION_TYPES.TYPE_DATA_FS:
+      switch (subtype) {
+        case TRANSACTION_TYPES.SUBTYPE_DATA_FS_METADATA:
+          return 'DATA FS METADATA';
+        case TRANSACTION_TYPES.SUBTYPE_DATA_FS_BINARY:
+          return 'DATA FS BINARY';
+        default:
+          return 'DATA FS';
+      }
     default:
       return 'UNDEFINED';
   }
