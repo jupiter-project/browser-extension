@@ -30,7 +30,7 @@ const getTransaction = async (transaction) => {
 }
 
 const setAccountInfo = async (params) => {
-  const url = `/nxt?requestType=setAccountInfo&name=${params.name}&description=${params.description}&secretPhrase=${params.secretPhrase}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  const url = `/nxt?requestType=setAccountInfo&name=${params.name}&description=${params.description}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
   return await apiAxios.post(url)
 }
 
@@ -43,12 +43,17 @@ const getBlockchainTransactions = async ({ account, firstIndex, lastIndex }) => 
 }
 
 const sendMoney = async (params) => {
-  const url = `/nxt?requestType=sendMoney&recipient=${params.receiver}&amountNQT=${params.amount}&message=${params.sender}&secretPhrase=${params.passphrase}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  const url = `/nxt?requestType=sendMoney&recipient=${params.receiver}&amountNQT=${params.amount}&message=${params.sender}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
   return await apiAxios.post(url)
 }
 
 const transferAsset = async (params) => {
-  const url = `/nxt?requestType=transferAsset&recipient=${params.receiver}&asset=${params.asset}&quantityQNT=${params.amount}&message=${params.sender}&secretPhrase=${params.passphrase}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  const url = `/nxt?requestType=transferAsset&recipient=${params.receiver}&asset=${params.asset}&quantityQNT=${params.amount}&message=${params.sender}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  return await apiAxios.post(url)
+}
+
+const broadcastTransaction = async (transactionBytes) => {
+  const url = `/nxt?requestType=broadcastTransaction&transactionBytes=${transactionBytes}`;
   return await apiAxios.post(url)
 }
 
@@ -61,5 +66,6 @@ export {
   getAccountAssets,
   getBlockchainTransactions,
   sendMoney,
-  transferAsset
+  transferAsset,
+  broadcastTransaction
 };

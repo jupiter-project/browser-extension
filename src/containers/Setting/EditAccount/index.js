@@ -15,6 +15,7 @@ import {
   ACCOUNT_DESCRIPTION_VALID
 } from 'utils/constants/validations'
 import { useAccount } from 'contexts/account-context'
+import signTransaction from 'utils/helpers/signTransaction';
 
 const schema = yup.object().shape({
   name: ACCOUNT_NAME_VALID,
@@ -60,17 +61,24 @@ const EditAccount = () => {
       const params = {
         name: data.name,
         description: data.description,
-        secretPhrase: passphrase,
         publicKey: accountInfo.publicKey
       }
 
-      const response = await jupiterAPI.setAccountInfo(params);
-      if (response?.errorCode) {
+      const { unsignedTransactionBytes = '', errorCode = '' } = await jupiterAPI.setAccountInfo(params);
+      if (errorCode) {
         // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
         setLoading(false)
         return;
       }
 
+      const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
+      const response = await jupiterAPI.broadcastTransaction(transactionBytes);
+      console.log(response)
+      if (response?.errorCode) {
+        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        setLoading(false)
+        return;
+      }
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
     } catch (error) {
       console.log(error)

@@ -20,6 +20,7 @@ import {
 } from 'utils/constants/validations'
 import TEXT_MASKS from 'utils/constants/text-masks'
 import LINKS from 'utils/constants/links'
+import signTransaction from 'utils/helpers/signTransaction';
 
 const schema = yup.object().shape({
   account: ACCOUNT_VALID,
@@ -66,16 +67,24 @@ const SendAsset = () => {
         sender: accountInfo.account,
         asset: asset.asset,
         amount: data.amount * (10 ** asset.decimals),
-        publicKey: accountInfo.publicKey,
-        passphrase
+        publicKey: accountInfo.publicKey
       }
 
-      const response = await jupiterAPI.sendMoney(params);
+      const { unsignedTransactionBytes = '', errorCode = '' } = await jupiterAPI.transferAsset(params);
+      if (errorCode) {
+        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        setLoading(false)
+        return;
+      }
+
+      const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
+      const response = await jupiterAPI.broadcastTransaction(transactionBytes);
       if (response?.errorCode) {
         // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
         setLoading(false)
         return;
       }
+
       // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
       setValue('amount', '')
       routePush(LINKS.MY_ACCOUNT)

@@ -10,7 +10,7 @@ const ContractContext = createContext(null)
 
 export function AccountProvider({ children }) {
   const [isLocked, setIsLocked] = useState(true)
-  const [passphrase, setPassphrase] = useState({})
+  const [passphrase, setPassphrase] = useState('')
   const [accountRS, setAccountRS] = useState('')
   const [accountInfo, setAccountInfo] = useState({})
   const [assets, setAssets] = useState([])
