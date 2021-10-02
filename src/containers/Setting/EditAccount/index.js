@@ -73,7 +73,6 @@ const EditAccount = () => {
 
       const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
       const response = await jupiterAPI.broadcastTransaction(transactionBytes);
-      console.log(response)
       if (response?.errorCode) {
         // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
         setLoading(false)
