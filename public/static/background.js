@@ -13,7 +13,7 @@ chrome.runtime.onMessageExternal.addListener((request, sender, sendResponse) => 
         sendResponse(accountRS)
       });
       break;
-    case 'SIGN_TRANSACTION':
+    case 'GET_PASSPHRASE':
       chrome.storage.local.get("account", (account) => {
         const { account: { passphrase = '' } = {} } = account
         const decodedPassphrase = atob(passphrase)
