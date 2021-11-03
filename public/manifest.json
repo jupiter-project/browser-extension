@@ -22,5 +22,11 @@
   ],
   "host_permissions": [
     "*://*/*"
-  ]
+  ],
+  "externally_connectable": {
+    "matches": [
+      "*://localhost/*",
+      "*://*.jup.io/*"
+    ]
+  }
 }

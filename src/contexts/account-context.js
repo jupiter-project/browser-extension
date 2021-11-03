@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react'
-import { encode, decode } from 'js-base64'
 
 import * as jupiterAPI from 'services/api-jupiter'
 import { IS_EXTENSION } from 'config'
@@ -42,7 +41,7 @@ export function AccountProvider({ children }) {
     }
 
     if (!!passphrase) {
-      const decodedPassphrase = decode(passphrase)
+      const decodedPassphrase = atob(passphrase)
       setPassphrase(decodedPassphrase)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -96,8 +95,8 @@ export function AccountProvider({ children }) {
   }, [accountInfo, getAssets, getTransactions])
 
   const setAccount = useCallback((accountRS, passphrase, password) => {
-    const encodedPassphrase = encode(passphrase)
-    const encodedPassword = encode(password)
+    const encodedPassphrase = btoa(passphrase)
+    const encodedPassword = btoa(password)
 
     if (IS_EXTENSION) {
       setAccountStore({
@@ -118,7 +117,7 @@ export function AccountProvider({ children }) {
   }, [setAccountRS, setPassphrase, setIsLocked, setAccountStore])
 
   const onUnlock = useCallback((passwordValue) => {
-    const encodedPassword = encode(passwordValue)
+    const encodedPassword = btoa(passwordValue)
 
     let passphrase = ''
     let password = ''
@@ -135,7 +134,7 @@ export function AccountProvider({ children }) {
     }
 
     if (!!passphrase) {
-      const decodedPassphrase = decode(passphrase)
+      const decodedPassphrase = atob(passphrase)
       setPassphrase(decodedPassphrase)
     }
 
