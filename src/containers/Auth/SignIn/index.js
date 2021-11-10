@@ -11,12 +11,10 @@ import { useAccount } from 'contexts/account-context'
 import * as jupiterAPI from 'services/api-jupiter'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import LinkButton from 'components/UI/Buttons/LinkButton'
-import AccountTextField from 'components/UI/TextFields/AccountTextField'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import LINKS from 'utils/constants/links'
-import { ACCOUNT_VALID, PASSPHRASE_VALID, PASSWORD_VALID } from 'utils/constants/validations'
-import TEXT_MASKS from 'utils/constants/text-masks'
+import { PASSPHRASE_VALID, PASSWORD_VALID } from 'utils/constants/validations'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -28,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 const schema = yup.object().shape({
-  account: ACCOUNT_VALID,
   passphrase: PASSPHRASE_VALID,
   password: PASSWORD_VALID
 });
@@ -46,7 +43,7 @@ const SignIn = () => {
   const onSubmit = useCallback(async (data) => {
     setLoading(true)
     try {
-      const response = await jupiterAPI.getAccountByAccountID(data.account);
+      const response = await jupiterAPI.getAccountByPassphrase(data.passphrase);
       if (!response?.accountRS) {
         setLoading(false)
         return;
@@ -67,17 +64,6 @@ const SignIn = () => {
         className={authClasses.form}
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Controller
-          as={<AccountTextField />}
-          name='account'
-          label='JUP Address'
-          placeholder='JUP-____-____-____-_____'
-          mask={TEXT_MASKS.ACCOUNT}
-          error={errors.account?.message}
-          className={authClasses.input}
-          control={control}
-          defaultValue=''
-        />
         <Controller
           as={<MagicTextField />}
           type='password'
