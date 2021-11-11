@@ -3,17 +3,20 @@ import ReactDOM from 'react-dom';
 
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import { NotifyProvider } from 'contexts/notify-context'
 import { RoutesProvider } from 'contexts/router-context';
 import { AccountProvider } from 'contexts/account-context';
 import './index.css';
 
 ReactDOM.render(
   <React.StrictMode>
-    <AccountProvider>
-      <RoutesProvider>
-        <App />
-      </RoutesProvider>
-    </AccountProvider>
+    <NotifyProvider>
+      <AccountProvider>
+        <RoutesProvider>
+          <App />
+        </RoutesProvider>
+      </AccountProvider>
+    </NotifyProvider>
   </React.StrictMode>,
   document.getElementById('root')
 );

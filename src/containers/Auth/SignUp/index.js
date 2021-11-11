@@ -7,6 +7,7 @@ import * as yup from 'yup'
 
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
+import { useNotify } from 'contexts/notify-context'
 import * as jupiterAPI from 'services/api-jupiter'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import LinkButton from 'components/UI/Buttons/LinkButton'
@@ -15,7 +16,7 @@ import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import generatePassphrase from 'utils/helpers/generatePassphrase'
 import LINKS from 'utils/constants/links'
 import { PASSWORD_VALID } from 'utils/constants/validations'
-// import MESSAGES from 'utils/constants/messages'
+import MESSAGES from 'utils/constants/messages'
 
 const useStyles = makeStyles((theme) => ({
   alert: {
@@ -34,6 +35,7 @@ const SignUp = () => {
   const authClasses = authPageStyles();
   const { routePush, setLoading } = useRoutes()
   const { setAccount } = useAccount()
+  const { onNotify } = useNotify()
 
   const [newPassphrase, setNewPassphrase] = useState('');
 
@@ -59,19 +61,20 @@ const SignUp = () => {
     try {
       const response = await jupiterAPI.getAccountByPassphrase(data.passphrase);
       if (!response?.accountRS) {
-        // setPopUp({ text: MESSAGES.AUTH_ERROR })
+        onNotify(MESSAGES.AUTH_ERROR)
         setLoading(false)
         return;
       }
 
       setAccount(response.accountRS, data.passphrase, data.password);
-      // setPopUp({ text: MESSAGES.SIGN_UP_SUCCESS })
       routePush(LINKS.MY_ACCOUNT);
+      onNotify(MESSAGES.SIGN_UP_SUCCESS)
     } catch (error) {
+      onNotify(MESSAGES.AUTH_ERROR)
       console.log(error)
     }
     setLoading(false)
-  }, [routePush, setAccount, setLoading]);
+  }, [routePush, setAccount, setLoading, onNotify]);
 
   return (
     <AuthWrapper>

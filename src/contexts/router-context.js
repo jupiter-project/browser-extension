@@ -67,17 +67,5 @@ export function useRoutes() {
     throw new Error('Missing stats context')
   }
 
-  const {
-    currentRouter,
-    routerParams,
-    routePush,
-    setLoading
-  } = context
-
-  return {
-    currentRouter,
-    routerParams,
-    routePush,
-    setLoading
-  }
+  return context
 }

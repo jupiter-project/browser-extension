@@ -9,6 +9,7 @@ import * as yup from 'yup'
 import * as jupiterAPI from 'services/api-jupiter'
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
+import { useNotify } from 'contexts/notify-context'
 import Layout from 'Layout'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
@@ -21,6 +22,7 @@ import {
 import TEXT_MASKS from 'utils/constants/text-masks'
 import LINKS from 'utils/constants/links'
 import signTransaction from 'utils/helpers/signTransaction';
+import MESSAGES from 'utils/constants/messages'
 
 const schema = yup.object().shape({
   account: ACCOUNT_VALID,
@@ -54,6 +56,7 @@ const SendAsset = () => {
   const { setLoading, routerParams: { asset = {} } = {} } = useRoutes()
   const { accountInfo, passphrase } = useAccount()
   const { routePush } = useRoutes()
+  const { onNotify } = useNotify()
 
   const { control, errors, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema)
@@ -72,7 +75,7 @@ const SendAsset = () => {
 
       const { unsignedTransactionBytes = '', errorCode = '' } = await jupiterAPI.transferAsset(params);
       if (errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SEND_ASSET_ERROR)
         setLoading(false)
         return;
       }
@@ -80,20 +83,20 @@ const SendAsset = () => {
       const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
       const response = await jupiterAPI.broadcastTransaction(transactionBytes);
       if (response?.errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SEND_ASSET_ERROR)
         setLoading(false)
         return;
       }
 
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
       setValue('amount', '')
       routePush(LINKS.MY_ACCOUNT)
+      onNotify(MESSAGES.SEND_ASSET_SUCCESS)
     } catch (error) {
       console.log(error)
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+      onNotify(MESSAGES.SEND_ASSET_ERROR)
     }
     setLoading(false)
-  }, [asset, accountInfo, passphrase, setLoading, setValue, routePush]);
+  }, [asset, accountInfo, passphrase, setLoading, setValue, routePush, onNotify]);
 
   return (
     <Layout>

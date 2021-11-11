@@ -7,12 +7,14 @@ import * as yup from 'yup'
 
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
+import { useNotify } from 'contexts/notify-context'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import LinkButton from 'components/UI/Buttons/LinkButton'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import LINKS from 'utils/constants/links'
 import { PASSWORD_VALID } from 'utils/constants/validations'
+import MESSAGES from 'utils/constants/messages'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -32,6 +34,7 @@ const Unlock = () => {
   const authClasses = authPageStyles();
   const { setLoading } = useRoutes()
   const { onUnlock } = useAccount()
+  const { onNotify } = useNotify()
 
   const { control, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
@@ -42,13 +45,13 @@ const Unlock = () => {
     try {
       const response = await onUnlock(data.password);
       if (!response) {
-        alert('Wrong password!')
+        onNotify(MESSAGES.WRONG_PASSWORD)
       }
     } catch (error) {
       console.log(error)
     }
     setLoading(false)
-  }, [setLoading, onUnlock]);
+  }, [setLoading, onUnlock, onNotify]);
 
   return (
     <AuthWrapper>

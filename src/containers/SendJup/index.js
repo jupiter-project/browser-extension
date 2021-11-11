@@ -9,6 +9,7 @@ import * as yup from 'yup'
 import * as jupiterAPI from 'services/api-jupiter'
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
+import { useNotify } from 'contexts/notify-context'
 import Layout from 'Layout'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
@@ -21,6 +22,7 @@ import TEXT_MASKS from 'utils/constants/text-masks'
 import { NQT_WEIGHT } from 'utils/constants/common'
 import LINKS from 'utils/constants/links'
 import signTransaction from 'utils/helpers/signTransaction';
+import MESSAGES from 'utils/constants/messages'
 
 const schema = yup.object().shape({
   account: ACCOUNT_VALID,
@@ -54,6 +56,7 @@ const SendJup = () => {
   const { setLoading } = useRoutes()
   const { accountInfo, passphrase } = useAccount()
   const { routePush } = useRoutes()
+  const { onNotify } = useNotify()
 
   const { control, errors, handleSubmit, setValue } = useForm({
     resolver: yupResolver(schema)
@@ -71,7 +74,7 @@ const SendJup = () => {
 
       const { unsignedTransactionBytes = '', errorCode = '' } = await jupiterAPI.sendMoney(params);
       if (errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SEND_JUP_ERROR)
         setLoading(false)
         return;
       }
@@ -79,20 +82,20 @@ const SendJup = () => {
       const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
       const response = await jupiterAPI.broadcastTransaction(transactionBytes);
       if (response?.errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SEND_JUP_ERROR)
         setLoading(false)
         return;
       }
 
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
+      onNotify(MESSAGES.SEND_JUP_SUCCESS)
       setValue('amount', '')
       routePush(LINKS.MY_ACCOUNT)
     } catch (error) {
       console.log(error)
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+      onNotify(MESSAGES.SEND_JUP_ERROR)
     }
     setLoading(false)
-  }, [accountInfo, passphrase, setLoading, setValue, routePush]);
+  }, [accountInfo, passphrase, setLoading, setValue, routePush, onNotify]);
 
   return (
     <Layout>

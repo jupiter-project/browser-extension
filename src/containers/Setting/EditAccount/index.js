@@ -8,6 +8,7 @@ import * as yup from 'yup'
 
 import * as jupiterAPI from 'services/api-jupiter'
 import { useRoutes } from 'contexts/router-context'
+import { useNotify } from 'contexts/notify-context'
 import ContainedButton from 'components/UI/Buttons/ContainedButton'
 import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import {
@@ -16,6 +17,7 @@ import {
 } from 'utils/constants/validations'
 import { useAccount } from 'contexts/account-context'
 import signTransaction from 'utils/helpers/signTransaction';
+import MESSAGES from 'utils/constants/messages'
 
 const schema = yup.object().shape({
   name: ACCOUNT_NAME_VALID,
@@ -48,6 +50,7 @@ const EditAccount = () => {
   const classes = useStyles();
   const { setLoading } = useRoutes()
   const { accountInfo, passphrase } = useAccount()
+  const { onNotify } = useNotify()
 
   const { control, errors, formState, handleSubmit } = useForm({
     resolver: yupResolver(schema)
@@ -66,7 +69,7 @@ const EditAccount = () => {
 
       const { unsignedTransactionBytes = '', errorCode = '' } = await jupiterAPI.setAccountInfo(params);
       if (errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SET_ACCOUNT_ERROR)
         setLoading(false)
         return;
       }
@@ -74,17 +77,17 @@ const EditAccount = () => {
       const transactionBytes = signTransaction(unsignedTransactionBytes, passphrase)
       const response = await jupiterAPI.broadcastTransaction(transactionBytes);
       if (response?.errorCode) {
-        // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+        onNotify(MESSAGES.SET_ACCOUNT_ERROR)
         setLoading(false)
         return;
       }
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_SUCCESS })
+      onNotify(MESSAGES.SET_ACCOUNT_SUCCESS)
     } catch (error) {
       console.log(error)
-      // setPopUp({ text: MESSAGES.SET_ACCOUNT_ERROR })
+      onNotify(MESSAGES.SET_ACCOUNT_ERROR)
     }
     setLoading(false)
-  }, [accountInfo, passphrase, setLoading]);
+  }, [accountInfo, passphrase, setLoading, onNotify]);
 
   return (
     <form

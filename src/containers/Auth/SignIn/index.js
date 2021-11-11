@@ -6,6 +6,7 @@ import { useForm, Controller } from 'react-hook-form'
 import { yupResolver } from '@hookform/resolvers/yup'
 import * as yup from 'yup'
 
+import { useNotify } from 'contexts/notify-context'
 import { useRoutes } from 'contexts/router-context'
 import { useAccount } from 'contexts/account-context'
 import * as jupiterAPI from 'services/api-jupiter'
@@ -15,6 +16,7 @@ import MagicTextField from 'components/UI/TextFields/MagicTextField'
 import AuthWrapper, { authPageStyles } from '../Shared/AuthWrapper'
 import LINKS from 'utils/constants/links'
 import { PASSPHRASE_VALID, PASSWORD_VALID } from 'utils/constants/validations'
+import MESSAGES from 'utils/constants/messages'
 
 const useStyles = makeStyles((theme) => ({
   footer: {
@@ -35,6 +37,7 @@ const SignIn = () => {
   const authClasses = authPageStyles();
   const { routePush, setLoading } = useRoutes()
   const { setAccount } = useAccount()
+  const { onNotify } = useNotify()
 
   const { control, handleSubmit, errors } = useForm({
     resolver: yupResolver(schema)
@@ -46,16 +49,19 @@ const SignIn = () => {
       const response = await jupiterAPI.getAccountByPassphrase(data.passphrase);
       if (!response?.accountRS) {
         setLoading(false)
+        onNotify(MESSAGES.AUTH_ERROR)
         return;
       }
 
       setAccount(response.accountRS, data.passphrase, data.password);
       routePush(LINKS.MY_ACCOUNT)
+      onNotify(MESSAGES.SIGN_IN_SUCCESS)
     } catch (error) {
       console.log(error)
+      onNotify(MESSAGES.AUTH_ERROR)
     }
     setLoading(false)
-  }, [routePush, setLoading, setAccount]);
+  }, [routePush, setLoading, setAccount, onNotify]);
 
   return (
     <AuthWrapper>

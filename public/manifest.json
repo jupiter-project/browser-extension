@@ -18,7 +18,8 @@
   "permissions": [
     "storage",
     "clipboardWrite",
-    "activeTab"
+    "activeTab",
+    "notifications"
   ],
   "host_permissions": [
     "*://*/*"

@@ -33,7 +33,6 @@ const ActivityPanel = (props) => {
   const [selectedTransaction, setSelectedTransaction] = useState({})
 
   const transactionHandler = (transaction) => () => {
-    console.log(transaction)
     setSelectedTransaction(transaction)
     setOpenModal(true)
   }
