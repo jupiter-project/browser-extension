@@ -14,6 +14,8 @@ const MESSAGES = Object.freeze({
   SEND_ASSET_SUCCESS: 'Transfer Assets transaction success',
   SEND_JUP_ERROR: 'Transfer Jup transaction failed',
   SEND_JUP_SUCCESS: 'Transfer Jup transaction success',
+  BUY_ASSET_ERROR: 'Buy Asset transaction failed',
+  BUY_ASSET_SUCCESS: 'Buy Asset transaction success',
 });
 
 export default MESSAGES;

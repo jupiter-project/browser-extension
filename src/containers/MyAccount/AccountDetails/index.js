@@ -2,6 +2,7 @@
 import React, { memo } from 'react'
 import { Tabs, Tab } from '@material-ui/core'
 
+import MainAssetsPanel from './MainAssetsPanel'
 import AssetsPanel from './AssetsPanel'
 import ActivityPanel from './ActivityPanel'
 
@@ -23,11 +24,13 @@ const AccountDetails = () => {
         scrollButtons='auto'
         aria-label='scrollable auto tabs example'
       >
-        <Tab label='Assets' {...a11yProps(0)} />
-        <Tab label='Activity' {...a11yProps(1)} />
+        <Tab label='Staking Assets' {...a11yProps(0)} />
+        <Tab label='Assets' {...a11yProps(1)} />
+        <Tab label='Activity' {...a11yProps(2)} />
       </Tabs>
-      <AssetsPanel value={value} index={0} />
-      <ActivityPanel value={value} index={1} />
+      <MainAssetsPanel value={value} index={0} />
+      <AssetsPanel value={value} index={1} />
+      <ActivityPanel value={value} index={2} />
     </>
   )
 }

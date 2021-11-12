@@ -8,6 +8,7 @@ const LINKS = Object.freeze({
   SETTING: 'setting',
   SEND_JUP: 'send-jup',
   SEND_ASSET: 'send-asset',
+  BUY_ASSET: 'buy-asset'
 });
 
 export default LINKS;

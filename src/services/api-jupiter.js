@@ -57,6 +57,23 @@ const broadcastTransaction = async (transactionBytes) => {
   return await apiAxios.post(url)
 }
 
+const getAssetById = async (asset) => {
+  return await apiAxios.get(`/nxt?requestType=getAsset&asset=${asset}`)
+}
+
+const getAccountAssetInfo = async (account, asset) => {
+  return await apiAxios.get(`/nxt?requestType=getAccountAssets&asset=${asset}&account=${account}`)
+}
+
+const getAskOrders = async (asset) => {
+  return await apiAxios.get(`/nxt?requestType=getAskOrders&asset=${asset}`)
+}
+
+const placeBidOrder = async (params) => {
+  const url = `/nxt?requestType=placeBidOrder&asset=${params.asset}&quantityQNT=${params.quantity}&priceNQT=${params.price}&publicKey=${params.publicKey}&deadline=24&feeNQT=0`;
+  return await apiAxios.post(url)
+}
+
 export {
   getAccountByPassphrase,
   getAccountByAccountID,
@@ -67,5 +84,9 @@ export {
   getBlockchainTransactions,
   sendMoney,
   transferAsset,
-  broadcastTransaction
+  broadcastTransaction,
+  getAssetById,
+  getAccountAssetInfo,
+  getAskOrders,
+  placeBidOrder
 };

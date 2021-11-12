@@ -15,6 +15,7 @@ const MyAccount = lazy(() => import('containers/MyAccount'))
 const Setting = lazy(() => import('containers/Setting'))
 const SendJup = lazy(() => import('containers/SendJup'))
 const SendAsset = lazy(() => import('containers/SendAsset'))
+const BuyAsset = lazy(() => import('containers/BuyAsset'))
 
 function App() {
   const { currentRouter } = useRoutes()
@@ -29,6 +30,7 @@ function App() {
       case LINKS.SETTING: return <Setting />
       case LINKS.SEND_JUP: return <SendJup />
       case LINKS.SEND_ASSET: return <SendAsset />
+      case LINKS.BUY_ASSET: return <BuyAsset />
       default: return <Welcome />
     }
   }
