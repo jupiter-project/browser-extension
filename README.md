@@ -1,4 +1,4 @@
-# Getting Started with Jupiter Europa (JupMask)
+# Getting Started with Jupiter Europa
 Browser extension to interact with Jupiter's blockchain by sending $JUP and other assets created on the Jupiter blockchain. Create accounts, sign transactions, and interact with webpages that are Europa enabled.
 
 Search for Europa in Chrome Store and install the extension.
