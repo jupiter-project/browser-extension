@@ -1,5 +1,5 @@
 
-const JUPITER_URL = 'https://nodes.jup.io/'
+const JUPITER_URL = 'https://europa.jup.io/'
 
 const IS_EXTENSION = true
 
