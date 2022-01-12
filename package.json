@@ -1,6 +1,6 @@
 {
   "name": "jupiter_europa",
-  "version": "0.2.0",
+  "version": "1.3.0",
   "private": true,
   "dependencies": {
     "@extend-chrome/notify": "^2.0.0",
